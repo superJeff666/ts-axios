@@ -1,4 +1,5 @@
 import { isPlainObject } from './util'
+import { head } from 'shelljs'
 
 function normalizeHeaderName(headers: any, normalizedName: string): void {
   if (!headers) {
@@ -20,4 +21,23 @@ export function processHeaders(headers: any, data: any): any {
     }
   }
   return headers;
+}
+
+export function parseHeaders(headers:string):any {
+  let parsed = Object.create(null);
+  if(!headers) {
+    return;
+  }
+  headers.split('\r\n').forEach((line) => {
+    let [key,val] = line.split(':');
+    key = key.trim().toLowerCase();
+    if(!key) {
+      return;
+    }
+    if(val) {
+      val = val.trim();
+    }
+    parsed[key] = val;
+  })
+  return parsed
 }
